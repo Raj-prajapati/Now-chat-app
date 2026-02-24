@@ -8,7 +8,7 @@ export const protectRoute=async (req,res,next) => {
         const token=req.cookies.token
 
         if(!token){
-            return res.status(400).json({message:"Unauthorizes - invalid user"})
+            return res.status(401).json({message:"Unauthorizes - invalid user"})
         }
 
         const veryfiedToken=jwt.verify(token,process.env.JWT_SECRET)

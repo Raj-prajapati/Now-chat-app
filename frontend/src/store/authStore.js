@@ -6,30 +6,24 @@ import { data } from "react-router-dom";
 import { set } from "zod";
 import { persist } from "zustand/middleware";
 
+
 baseURL: import.meta.env.MODE === "development" ? "http://localhost:5001/api" : "/";
 
-const useAuthStore = create((set) => {
- 
-   
-  return {
-    authUser: null,
+const useAuthStore = create( persist(
+  (set, get)=>{
+  
+     return {
+    
     isSigningUp: false,
     isLogingIn: false,
     isUpdatingProfile: false,
     isCheckingAuth: true,
- 
-  //  authUser:persist(
-  //   (set) => ({
-  //     authUser: null,
-  //   }),
-  //   {
-  //     name: "auth-storage",
-  //   }),
+    authUser:null,
 
     checkAuth: async () => {
       try {
         const res = await axiosInstance.get("/auth/check");
-        console.log("this is authuser", authUser)
+       
         set({ authUser: res.data });
       } catch (error) {
         console.log("error in checkauth react " + error.message);
@@ -97,10 +91,15 @@ login: async (formData) => {
  }
   
  }
+  }},
+    {
+      name: "auth-storage",
 
+      partialize: (state) => ({
+        authUser: state.authUser, 
+      }),
+    }
 
-  };
-});
-
+))
 
 export default useAuthStore;

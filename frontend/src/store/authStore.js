@@ -22,6 +22,7 @@ const useAuthStore = create((set) => {
     checkAuth: async () => {
       try {
         const res = await axiosInstance.get("/auth/check");
+        console.log("this is authuser", authUser)
         set({ authUser: res.data });
       } catch (error) {
         console.log("error in checkauth react " + error.message);

@@ -1,51 +1,60 @@
-import React ,{useState}from 'react'
-import useAuthStore from '../store/authStore'
-import {Camera, Mail, User} from "lucide-react"
+import React, { useState } from "react";
+import useAuthStore from "../store/authStore";
+import { Camera, Mail, User, X } from "lucide-react";
+import { Link } from "react-router-dom";
 // import avatar from "../assets/avatar2.png"
 
 const Profile = () => {
- const {isUpdatingProfile,updateProfile,authUser}=useAuthStore();
+  const { isUpdatingProfile, updateProfile, authUser } = useAuthStore();
 
- const [selectedImg, setSelectedImg] = useState(null);
- 
+  const [selectedImg, setSelectedImg] = useState(null);
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
+    const preview = URL.createObjectURL(file);
+    setSelectedImg(preview);
 
+    const formData = new FormData();
+    formData.append("profilePic", file);
 
-const handleImageUpload = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+    try {
+      await updateProfile(formData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-  
-  const preview = URL.createObjectURL(file);
-  setSelectedImg(preview);
+  const clickHandler = () => {
+    <Link to="/"></Link>;
+  };
 
-  const formData = new FormData();
-  formData.append("profilePic", file);
+  return (
+    <div className="h-full pt-20 bg-zinc-800 border-2">
+      <div className="max-w-2xl p-4 py-8 mx-auto">
+        <div className="bg-base-300 rounded-xl p-6 space-y-8">
+         
+          <div className="flex">
+            <Link to="/" className="ml-auto">
+              <button className="hover:text-success">
+                <X />
+              </button>
+            </Link>
+          </div>
+          <div className="text-center">
+            <h1 className="font-semibold text-2xl">Profile</h1>
+            <p className="mt-2">Your Profile Information</p>
+          </div>
+          <div className=" flex flex-col items-center gap-4">
+            <div className="relative">
+              <img
+                src={selectedImg || authUser?.profilePic || "/avatar.png"}
+                alt=""
+                className="size-32 rounded-full object-cover border-4"
+              />
 
-  try {
-    await updateProfile(formData); 
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-
- return(
-  <div className='h-full pt-20 bg-zinc-800 border-2'>
-    <div className='max-w-2xl p-4 py-8 mx-auto'>
-       <div className='bg-base-300 rounded-xl p-6 space-y-8'>
-
-        <div className='text-center'>
-            <h1 className='font-semibold text-2xl'>Profile</h1>
-            <p className='mt-2'>Your Profile Information</p>
-        </div>
-          <div className=' flex flex-col items-center gap-4'>
-               <div className='relative'>
-                     <img src={selectedImg || authUser?.profilePic || "/avatar.png"} alt="" 
-                     className='size-32 rounded-full object-cover border-4'/>
-
-                     <label
+              <label
                 htmlFor="avatar-upload"
                 className={`
                   absolute bottom-0 right-0 
@@ -55,8 +64,7 @@ const handleImageUpload = async (e) => {
                   ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""}
                 `}
               >
-
-               <Camera className="w-5 h-5 text-base-200" />
+                <Camera className="w-5 h-5 text-base-200" />
                 <input
                   type="file"
                   id="avatar-upload"
@@ -66,20 +74,23 @@ const handleImageUpload = async (e) => {
                   disabled={isUpdatingProfile}
                 />
               </label>
-
-               </div>
-                <p className="text-sm text-zinc-400">
-              {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
+            </div>
+            <p className="text-sm text-zinc-400">
+              {isUpdatingProfile
+                ? "Uploading..."
+                : "Click the camera icon to update your photo"}
             </p>
-          </div> 
+          </div>
 
-           <div className="space-y-6">
+          <div className="space-y-6">
             <div className="space-y-1.5">
               <div className="text-sm text-zinc-400 flex items-center gap-2">
                 <User className="w-4 h-4" />
                 Full Name
               </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.fullname}</p>
+              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
+                {authUser?.fullname}
+              </p>
             </div>
 
             <div className="space-y-1.5">
@@ -87,12 +98,15 @@ const handleImageUpload = async (e) => {
                 <Mail className="w-4 h-4" />
                 Email Address
               </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.email}</p>
+              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
+                {authUser?.email}
+              </p>
             </div>
-          
           </div>
-                 <div className="mt-6 bg-base-300 rounded-xl p-6">
-            <h2 className="text-lg font-medium leading-tight mb-7">Account Information</h2>
+          <div className="mt-6 bg-base-300 rounded-xl p-6">
+            <h2 className="text-lg font-medium leading-tight mb-7">
+              Account Information
+            </h2>
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between py-4 border-b border-zinc-700">
                 <span>Member Since</span>
@@ -104,15 +118,10 @@ const handleImageUpload = async (e) => {
               </div>
             </div>
           </div>
-        
-
-          
-
-       </div>
+        </div>
+      </div>
     </div>
-    
-  </div>
- )
-}
+  );
+};
 
-export default Profile
+export default Profile;

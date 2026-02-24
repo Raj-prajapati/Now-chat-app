@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { THEMES } from "../constants/index.js";
 import { useThemeStore } from "../store/themeStore";
+import { X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const SettingsPage = () => {
   const theme = useThemeStore((state) => state.theme);
   const setTheme = useThemeStore((state) => state.setTheme);
-  
-  
+
   const [selectedTheme, setSelectedTheme] = useState(theme);
 
- 
   useEffect(() => {
     setSelectedTheme(theme);
   }, [theme]);
-
 
   const previewTheme = (t) => {
     document.documentElement.setAttribute("data-theme", t);
@@ -23,17 +22,21 @@ const SettingsPage = () => {
     document.documentElement.setAttribute("data-theme", theme);
   };
 
- 
   const applyTheme = () => {
     setTheme(selectedTheme);
   };
 
   return (
-    
-    <div className="min-h-screen bg-base-100 text-base-content">      
+    <div className="min-h-screen bg-base-100 text-base-content">
+      <div className="flex">
+        <Link to="/" className="ml-auto mr-1 mt-1">
+          <button className="hover:text-success">
+            <X />
+          </button>
+        </Link>
+      </div>
       <div className="max-w-5xl mx-auto p-6 grid grid-cols-12 gap-6">
-
-       
+        
         <aside className="col-span-12 md:col-span-4">
           <div className="bg-base-200 border border-base-300 rounded-xl p-4">
             <h2 className="text-lg font-bold mb-3">Settings</h2>
@@ -59,7 +62,6 @@ const SettingsPage = () => {
           </div>
         </aside>
 
-        
         <main className="col-span-12 md:col-span-8">
           <div className="bg-base-200 border border-base-300 rounded-xl p-6">
             <h1 className="text-2xl font-bold">Appearance</h1>
@@ -67,7 +69,6 @@ const SettingsPage = () => {
               Current Theme: <span className="font-semibold">{theme}</span>
             </p>
 
-        
             <div className="mt-6">
               <h3 className="font-semibold mb-3">Choose Theme</h3>
 
@@ -88,7 +89,6 @@ const SettingsPage = () => {
                   >
                     <div className="font-semibold capitalize">{t}</div>
 
-                  
                     <div className="flex gap-2 mt-2">
                       <div className="h-3 w-3 rounded-full bg-primary" />
                       <div className="h-3 w-3 rounded-full bg-secondary" />
